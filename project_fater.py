@@ -50,8 +50,16 @@ class Student():
                     break
                 else:
                     print("\tError:you must enter 1 or 2")
-        with open('request.json','a')as r:
-            json.dump(r1,r,indent=4)
+        try:
+            with open('request.json','r')as r:
+                requests = json.load(r)
+        except (FileNotFoundError,json.JSONDecodeError):
+            requests=[]
+
+        requests.append(r1)
+        with open('request.json','w')as r:
+            json.dump(requests,r,indent=4)
+        print("request saved successfully")
 
 
 
@@ -73,10 +81,32 @@ class Teacher():
             if teacher['username']== int(self.username) and  teacher['password']== int(self.password) :
                 print('\n')
                 print(f"welcome {teacher['name']} {teacher['family']}")
+                self.name = teacher['name']
+                self.family = teacher['family']
                 flag = True
                 break
         if flag == False:
             print("\tsorry you don't access to the site")
+        return flag
+    def see_requests(self):
+        try:
+            with open ('request.json','r')as r:
+                requests = json.load(r)
+                for req in requests:
+                    own_requests = [req for req in requests  if req['teacher_name']==self.name and req['teacher_family']==self.family]
+                    if own_requests:
+                            print(req)
+                    else:
+                        print("No requests found for you")
+        except (FileNotFoundError,json.JSONDecodeError):
+            print("\tError:the file is empty")
+                
+                
+                    
+
+                        
+
+
 
 print("1.Student")
 print("2.Teacher")
@@ -101,7 +131,13 @@ while True:
         print(greet.center(50,'.'))
         tea = Teacher()
         tea.get_teacher()
-        tea.read_information_teacher()
+        if tea.read_information_teacher():
+            print("1.see the requests")
+            z=int(input("enter:"))
+            if z==1:
+                tea.see_requests()
+            else:
+                print("hgkf")
         break
     else:
         print("\tError:wrong number")
