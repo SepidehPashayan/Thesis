@@ -72,6 +72,23 @@ class Student():
         with open('request.json','w')as r:
             json.dump(requests,r,indent=4)
         print("request saved successfully")
+    def see_reactions(self):
+        with open ('request.json','r')as r:
+            requests = json.load(r)
+            own_requests = [req for req in requests  if req['student_id']==int(self.password)]
+            if own_requests:
+                for req in own_requests:
+                    print('\n')
+                    print(f"id:{req['request_id']}")
+                    print(f"date:{req['date']}")
+                    print(f"student_id:{req['student_id']}")
+                    print(f"teacher's name:{req['teacher_name']}")
+                    print(f"teacher's last name:{req['teacher_family']}")
+                    print(f"condition:{req['condition']}")
+                    print('\n')
+            else:
+                print("No requests found for you")
+                        
 
 
 
@@ -160,7 +177,7 @@ while True:
             if y==1:
                 stu.request()
             else:
-                print("jfxh")
+                stu.see_reactions()
         break
     elif x==2:
         greet = "welcome teacher"
