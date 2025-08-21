@@ -15,7 +15,8 @@ class Student():
         for student in students:
             if student['username']== int(self.username) and  student['password']== int(self.password) :
                 print('\n')
-                print(f"welcome {student['name']} {student['family']}")
+                print(f".....welcome {student['name']} {student['family']}.....")
+                print('\n')
                 flag =True
                 break
         if flag==False:
@@ -25,7 +26,18 @@ class Student():
         with open ('course.json','r')as c:
             courses = json.load(c)
             for course in courses:
-                print(course)
+                print('\n')
+                print(f"id:{course['id']}")
+                print(f"name:{course['name']}")
+                print(f"teacher's name:{course['teacher_name']}")
+                print(f"teacher's lastname:{course['teacher_family']}")
+                print(f"year:{course['year']}")
+                print(f"term:{course['y']}")
+                print(f"capacity:{course['cap']}")
+                print(f"resources:{course['curr']}")
+                print(f"session:{course['session']}")
+                print(f"unit:{course['unit']}")
+                print("\n")
             now = datetime.datetime.now()
             uniq_id = str(uuid.uuid4())
             while True:
@@ -80,7 +92,8 @@ class Teacher():
         for teacher in teachers:
             if teacher['username']== int(self.username) and  teacher['password']== int(self.password) :
                 print('\n')
-                print(f"welcome {teacher['name']} {teacher['family']}")
+                print(f".....welcome {teacher['name']} {teacher['family']}.....")
+                print('\n')
                 self.name = teacher['name']
                 self.family = teacher['family']
                 flag = True
@@ -95,7 +108,14 @@ class Teacher():
                 for req in requests:
                     own_requests = [req for req in requests  if req['teacher_name']==self.name and req['teacher_family']==self.family]
                     if own_requests:
-                            print(req)
+                            print('\n')
+                            print(f"id:{req['request_id']}")
+                            print(f"date:{req['date']}")
+                            print(f"student_id:{req['student_id']}")
+                            print(f"teacher's name:{req['teacher_name']}")
+                            print(f"teacher's last name:{req['teacher_family']}")
+                            print(f"condition:{req['condition']}")
+                            print('\n')
                     else:
                         print("No requests found for you")
         except (FileNotFoundError,json.JSONDecodeError):
