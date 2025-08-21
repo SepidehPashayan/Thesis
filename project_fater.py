@@ -105,18 +105,34 @@ class Teacher():
         try:
             with open ('request.json','r')as r:
                 requests = json.load(r)
-                for req in requests:
-                    own_requests = [req for req in requests  if req['teacher_name']==self.name and req['teacher_family']==self.family]
-                    if own_requests:
-                            print('\n')
-                            print(f"id:{req['request_id']}")
-                            print(f"date:{req['date']}")
-                            print(f"student_id:{req['student_id']}")
-                            print(f"teacher's name:{req['teacher_name']}")
-                            print(f"teacher's last name:{req['teacher_family']}")
-                            print(f"condition:{req['condition']}")
-                            print('\n')
-                    else:
+                own_requests = [req for req in requests  if req['teacher_name']==self.name and req['teacher_family']==self.family]
+                if own_requests:
+                    for req in own_requests:
+                        print('\n')
+                        print(f"id:{req['request_id']}")
+                        print(f"date:{req['date']}")
+                        print(f"student_id:{req['student_id']}")
+                        print(f"teacher's name:{req['teacher_name']}")
+                        print(f"teacher's last name:{req['teacher_family']}")
+                        print(f"condition:{req['condition']}")
+                        print('\n')
+                        if req['condition']=='waiting for the response':
+                            print("1.Accept")
+                            print("2.Reject")
+                            while True:
+                                x=int(input("choose:"))
+                                if x in [1,2]:
+                                    break
+                                print("\tError:wrong number")
+                            if x==1:
+                                req['condition']='Accept'
+                                print("answer saved successfully")
+                            elif x==2:
+                                req['condition']='Reject'
+                                print("answer saved successfully")
+                        with open('request.json','w')as r:
+                            json.dump(requests,r,indent=4)
+                else:
                         print("No requests found for you")
         except (FileNotFoundError,json.JSONDecodeError):
             print("\tError:the file is empty")
