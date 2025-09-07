@@ -13,7 +13,7 @@ c1 = {
     'teacher_family':'Firozeh',
     'year':1404 , 
     'y':'first',
-    'cap':25 ,
+    'cap':5 ,
     'curr':'books',
     'session':16,
     'unit':3
@@ -26,7 +26,7 @@ c2 = {
     'teacher_family':'Rasoli',
     'year':1404 , 
     'y':'first',
-    'cap':25 ,
+    'cap':5 ,
     'curr':'PDF',
     'session':16,
     'unit':3

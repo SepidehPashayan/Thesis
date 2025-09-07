@@ -2,6 +2,8 @@ import json
 import datetime
 import uuid
 
+
+
 class Student():
     def __init__(self):
         pass
@@ -26,18 +28,19 @@ class Student():
         with open ('course.json','r')as c:
             courses = json.load(c)
             for course in courses:
-                print('\n')
-                print(f"id:{course['id']}")
-                print(f"name:{course['name']}")
-                print(f"teacher's name:{course['teacher_name']}")
-                print(f"teacher's lastname:{course['teacher_family']}")
-                print(f"year:{course['year']}")
-                print(f"term:{course['y']}")
-                print(f"capacity:{course['cap']}")
-                print(f"resources:{course['curr']}")
-                print(f"session:{course['session']}")
-                print(f"unit:{course['unit']}")
-                print("\n")
+                if course['cap']!=0:
+                    print('\n')
+                    print(f"id:{course['id']}")
+                    print(f"name:{course['name']}")
+                    print(f"teacher's name:{course['teacher_name']}")
+                    print(f"teacher's lastname:{course['teacher_family']}")
+                    print(f"year:{course['year']}")
+                    print(f"term:{course['y']}")
+                    print(f"capacity:{course['cap']}")
+                    print(f"resources:{course['curr']}")
+                    print(f"session:{course['session']}")
+                    print(f"unit:{course['unit']}")
+                    print("\n")
             now = datetime.datetime.now()
             uniq_id = str(uuid.uuid4())
             while True:
@@ -86,6 +89,10 @@ class Student():
                     print(f"teacher's last name:{req['teacher_family']}")
                     print(f"condition:{req['condition']}")
                     print('\n')
+                    if req['condition']=='Reject':
+                        i=input("do you want to send a request again?(yes|no):")
+                        if i.lower()=='yes':
+                            self.request()
             else:
                 print("No requests found for you")
                         
@@ -144,6 +151,14 @@ class Teacher():
                             if x==1:
                                 req['condition']='Accept'
                                 print("answer saved successfully")
+                                with open('course.json','r')as c:
+                                    courses = json.load(c)
+                                    for course in courses:
+                                        if course['teacher_name'] == req['teacher_name'] and course['teacher_family'] == req['teacher_family']:
+                                            if course['cap']>0:
+                                                course['cap'] -=1
+                                    with open('course.json','w') as c:
+                                        json.dump(courses, c, indent=4)
                             elif x==2:
                                 req['condition']='Reject'
                                 print("answer saved successfully")
