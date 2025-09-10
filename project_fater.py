@@ -95,7 +95,87 @@ class Student():
                             self.request()
             else:
                 print("No requests found for you")
-                        
+    
+    def defense(self):
+        try:
+            with open('request.json', 'r') as r:
+                requests = json.load(r)
+        except (FileNotFoundError, json.JSONDecodeError):
+            print("\tNo requests found for you")
+            return
+
+        try:
+            sid = int(self.username)
+        except Exception:
+            print("\tError: invalid student id")
+            return
+
+        own_requests = [req for req in requests if req.get('student_id') == sid]
+        now = datetime.datetime.now()
+        eligible = []
+        for req in own_requests:
+            if req.get('condition') != 'Accept':
+                continue
+            date_str = req.get('date')
+            if not date_str:
+                continue
+
+            saved_date = None
+            try:
+                saved_date = datetime.datetime.strptime(date_str, "%a %b %d %H:%M:%S %Y")
+            except Exception:
+                try:
+                    saved_date = datetime.datetime.fromisoformat(date_str)
+                except Exception:
+                    continue
+
+            days = (now - saved_date).days
+            if days >= 60:
+                eligible.append((req, saved_date, days))
+
+        if not eligible:
+            print("\tError:you can't request for defense")
+            return
+        for req, saved_date, days in eligible:
+            print('\n')
+            print(f"id: {req.get('request_id')}")
+            print(f"date accepted: {req.get('date')}")
+            print(f"teacher: {req.get('teacher_name')} {req.get('teacher_family')}")
+            print(f"elapsed days: {days}")
+            ans = input("do tou want to request for defense?(yes/no): ").strip().lower()
+            if ans.lower()=='yes':
+                exists = any(
+                    r.get('student_id') == sid and
+                    r.get('teacher_name') == req.get('teacher_name') and
+                    r.get('teacher_family') == req.get('teacher_family') and
+                    r.get('request_type') == 'defense'
+                    for r in requests
+                )
+                if exists:
+                    print("\tError:you have requested for defense")
+                    continue
+
+                new_req = {
+                    'request_id': str(uuid.uuid4()),
+                    'date': now.ctime(),
+                    'student_id': sid,
+                    'teacher_name': req.get('teacher_name'),
+                    'teacher_family': req.get('teacher_family'),
+                    'condition': 'waiting for defense response',
+                    'request_type': 'defense'
+                }
+                try:
+                    with open('request_defense.json', 'r') as f:
+                        defense_requests = json.load(f)
+                except (FileNotFoundError, json.JSONDecodeError):
+                        defense_requests = []
+                defense_requests.append(new_req)
+                with open('request_defense.json', 'w') as f:
+                    json.dump(defense_requests, f, indent=4)
+                print("the defense request was registered")
+            else:
+                print("\tError:failed")
+
 
 
 
@@ -188,11 +268,14 @@ while True:
         if stu.read_information_student():
             print("1.request for thesis")
             print("2.see the thesis condition")
+            print("3.request for defense")
             y=int(input("enter:"))
             if y==1:
                 stu.request()
-            else:
+            elif y==2:
                 stu.see_reactions()
+            else:
+                stu.defense()
         break
     elif x==2:
         greet = "welcome teacher"
