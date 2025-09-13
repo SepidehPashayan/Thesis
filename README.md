@@ -62,4 +62,4 @@ request_defense.json :مربوط به اطلاعات درخواست دفاع م�
 
 🧡تمامی خطاها در این پروژه مدیریت شده و پیغام مناسب برای اونا نمایش داده میشه🧡
 
-https://github.com/SepidehPashayan/Thesis
+https://github.com/SepidehPashayan/Thesis.git
